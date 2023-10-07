@@ -1,0 +1,295 @@
+@font-face {
+  font-family: 'Seconda';
+  src: url("../fonts/SecondaRound-Regular.ttf");
+}
+
+$menus: (first: #584fac,
+  second: #27b092,
+  third: #4d9d2e,
+  fourth: #ab6a0e,
+  fifth: #8e343e,
+  sixth: #6d2356);
+
+$colors: (orange: #ae6d13,
+  teal: #26b095,
+  blue: #1a69b1,
+  purple: #5b51aa,
+  red: #8e343e,
+  darkpurple: #6c2456,
+  green: #4d9d2e,
+);
+
+
+$menu_keys: map-keys($menus);
+
+@each $menu in $menu_keys {
+  $color: map-get($menus, $menu);
+  $menu_index: index($menu_keys, $menu);
+
+  @if $menu_index {
+    .#{$menu}Menu .rollout {
+      background: $color;
+      width: 173px;
+      border-radius: 360px;
+      height: 24px;
+      display: inline-block !important;
+      position: absolute;
+      z-index: ($menu_index * 10);
+    }
+  }
+}
+
+@each $color,
+$value in $colors {
+  .#{$color} {
+    background: $value;
+    border: 2px solid $value;
+
+    .circle {
+      background: darken($value, 10%);
+      z-index: 5;
+    }
+  }
+}
+
+/* yellow: #ffb400 */
+span {
+  color: white;
+  font-family: 'Seconda', Sans-serif;
+}
+
+body .background {
+  background: #b7882b;
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  overflow-y: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.hoverFix {
+  display: inline-block;
+  min-width: 600px;
+}
+
+body.background {
+  background-color: #8c4253;
+}
+
+.option {
+  width: 600px;
+  border-radius: 360px;
+  // border: 2px solid black;
+  height: 20px;
+  text-align: right;
+  display: inline-block !important;
+  right: 20px;
+  position: relative;
+  color: white;
+  font-family: 'Seconda', Sans-serif;
+  transition: all 0.1s ease-out;
+  -webkit-transform: translateZ(0);
+  // visibilty: "hidden";
+  // display: none;
+  z-index: 1000;
+}
+
+
+.rollout.hide {
+  display: none !important;
+}
+
+// Use a loop to generate styles for .r1, .r2, .r3, .r4
+@for $i from 1 through 4 {
+  .r#{$i} {
+    transform-origin: right center;
+    left: (-230px + 155px * ($i - 1));
+  }
+}
+
+.circle {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  background: red;
+  color: red;
+  top: -2px;
+  right: -2px;
+  border-radius: 360px;
+}
+
+span {
+  position: relative;
+  //top: -8px;
+  right: 40px;
+}
+
+.space {
+  height: 50%;
+}
+
+.option:nth-child(6) {
+  background: red;
+}
+
+.option.view {
+  width: 300px !important;
+  visibility: visible;
+
+}
+
+.secondary_list {
+  display: inline-block;
+  position: absolute;
+}
+
+.secondary_list.sticky {
+  left: 750px;
+}
+
+.expand .extend_option {
+  visibility: visible;
+  animation-name: expander;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 1;
+  animation-duration: 1s;
+}
+
+@keyframes expander {
+  0% {
+    width: 15vw;
+  }
+
+  5% {
+    width: 15vw;
+  }
+
+  30% {
+    width: 25vw;
+  }
+
+  100% {
+    width: 25vw;
+  }
+}
+
+@keyframes collapse {
+  0% {
+    width: 25vw;
+    visibility: hidden !important;
+  }
+
+  25% {
+    width: 25vw;
+    visibility: hidden !important;
+  }
+
+  50% {
+    width: 15vw;
+    visibility: hidden !important;
+  }
+
+  100% {
+    width: 15vw;
+    visibility: hidden;
+  }
+}
+
+.fullWidth {
+  display: block !important;
+}
+
+.option2.sticky {
+  right: 5px;
+}
+
+.fullWidth.collapse .extend_option {
+  visibility: visible;
+  animation-name: expander;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 1;
+}
+
+.fullWidth .extend_option {
+  width: 250px;
+  right: 50px;
+  background: pink;
+  position: relative;
+  z-index: 2;
+  text-align: right;
+  border-radius: 360px;
+  height: 20px;
+  border: 2px solid pink;
+}
+
+.option2 {
+  position: absolute;
+  width: 175px;
+  right: 0px;
+  height: 20px;
+  display: block;
+  text-align: right;
+  top: 0px;
+  color: white;
+  font-family: Sans-serif;
+  border-radius: 360px;
+  transition: all 0.1s ease-out;
+  z-index:10;
+
+  span {
+    &.flipup {
+      animation-duration: 0.3s;
+      animation-timing-function: ease-out;
+      animation-fill-mode: forwards;
+      animation-name: stack;
+    }
+
+    &.flipdown {
+      animation-duration: 0.3s;
+      animation-timing-function: ease-in;
+      animation-fill-mode: forwards;
+      animation-name: stack-down;
+    }
+  }
+}
+
+@keyframes stack {
+  from {
+    transform: translateY(0%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
+}
+
+@keyframes stack-down {
+  from {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+
+.allMenus {
+  position: relative;
+}
+
+.activeMenu {
+  background: red;
+  height: 200px;
+  width: 100vw;
+  overflow-y: hidden;
+  position: fixed;
+  bottom: 0;
+}
