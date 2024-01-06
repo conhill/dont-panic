@@ -2,15 +2,94 @@ const anime = require('animejs');
 
 let locked = false;
 let startingAnimationDone = false;
-let clickedMenu = false;
-let greenTimeout;
-let tealTimeout;
-let blueTimeout;
-let orangeTimeout;
-let darkpurpleTimeout;
-let redTimeout;
+let selectedOptionFinal = {
+    target: undefined,
+    position: 0,
+    parent: undefined
+};
 
-//roll out start animation
+let animationCount = 0;
+
+////////////////////////////////////////////////////////////////
+
+
+// HELPERS
+
+
+////////////////////////////////////////////////////////////////
+function getRandomRotation() {
+    return Math.random() <= 0.5 ? "180" : "-180";
+}
+
+// Function to add class and hide elements
+function hideElements(selector) {
+    jQuery(selector).each(function (i, v) {
+        jQuery(v).addClass("hide");
+    });
+}
+
+const removeTransformsFromSecondMenu = function (menuNumber) {
+    return new Promise((resolve) => {
+        anime({
+            targets: menuNumber + ' .option2',
+            opacity: 0,
+            easing: 'easeOutExpo',
+            complete: () => {
+                // Resolve the promise when the animation is complete
+                resolve();
+            }
+        });
+    });
+};
+
+
+function getClassNameFromObj(el) {
+    if (!el || el.length === 0) return false;
+    var className = el[0].className;
+    var selector = "." + className.replace(/ /g, ".");
+    return selector;
+}
+
+function moveOptionToView(targetEl) {
+    jQuery(targetEl)
+        .appendTo('.activeMenu')
+        .insertAfter('.activeMenu .option2.grey')
+        .css({
+            'align-self': 'flex-start',
+            'position': 'relative',
+            'transform': 'none',
+            'right': '70px'
+        });
+}
+
+var closeMenuAfterSelection = function (singleMenu, listMenu) {
+    var singleMenuClass = getClassNameFromObj(singleMenu);
+    var option2Selector = singleMenuClass + ' .option2:not(".selected")';
+    var extendedOptionSelector = singleMenuClass + ' .extend_option';
+    var optionSelector = singleMenuClass + ' .option';
+
+    jQuery(option2Selector).css({
+        'opacity': 0
+    }).removeClass("sticky");
+
+    jQuery(optionSelector).removeClass('fullopen').css('width', '600px');
+    jQuery(extendedOptionSelector).css({
+        'width': '250px',
+        'opacity': 0
+    });
+
+    removeTransformsFromSecondMenu(singleMenuClass);
+}
+
+
+////////////////////////////////////////////////////////////////
+
+
+// START
+
+
+////////////////////////////////////////////////////////////////
+
 
 var rollOutMenu = function (color, menu) {
     var tl = anime.timeline({
@@ -18,19 +97,25 @@ var rollOutMenu = function (color, menu) {
         duration: 1000,
         complete: function () {
             //after it all completes allow other controls
-            startingAnimationDone = true;
             jQuery(menu + " .rollout").each(function (i, v) {
-                jQuery(v).addClass("hide");
+                if (!jQuery(v).hasClass("hide")) {
+                    jQuery(v).addClass("hide");
+                }
             });
+
+            animationCount++;
+
+            if(animationCount == 6 && locked == true){
+                locked = false;
+                startingAnimationDone = true;
+            }
         }
     });
 
-    let openingRotation1 = Math.random() <= 0.5 ? "180" : "-180"
-    let openingRotation2 = Math.random() <= 0.5 ? "180" : "-180"
-    let openingRotation3 = Math.random() <= 0.5 ? "180" : "-180"
-    let openingRotation4 = Math.random() <= 0.5 ? "180" : "-180"
-
-    console.log(color + ".option");
+    const openingRotation1 = getRandomRotation();
+    const openingRotation2 = getRandomRotation();
+    const openingRotation3 = getRandomRotation();
+    const openingRotation4 = getRandomRotation();
 
     tl.add({
             targets: menu + " .r1",
@@ -88,6 +173,7 @@ var rollOutMenu = function (color, menu) {
 };
 
 var start = function () {
+    locked = true;
     const menuData = [{
             color: ".purple",
             menu: ".firstMenu",
@@ -131,82 +217,18 @@ var start = function () {
     });
 };
 
-//hide any maxed option
-//if not current max
-//open clicked
-jQuery(document).on("click", ".hoverFix .option", function () {
-    locked = !locked;
-
-    console.log("are we locked");
-    console.log(locked);
-
-    clickedMenu = $(this);
-
-    //if open already. close itself
-    //if another open, close the opened
-    var closedItself = false;
-    var closeMenu = $(this);
-
-    if ($(this).hasClass("fullopen")) {
-        closedItself = true;
-        locked = false;
-        removeFlipUp(closeMenu, closedItself);
-    } else {
-        locked = true;
-        openMenu(closeMenu, false);
-    }
-
-});
+////////////////////////////////////////////////////////////////
 
 
-var removeTransformsFromSecondMenu = function (menuNumber) {
-    jQuery(menuNumber + ' .option2').each(function (_, i) {
-        jQuery(i).css('backface-visibility', 'hidden');
-        jQuery(i).css('transform', '')
-    })
-    console.log('here');
-}
+// ANIMATIONS
 
-$(document).on('mouseenter', '.hoverFix', function (event) {
-    var selector = getClassNameFromObj($(this).find(".option"));
-    // console.log(selector)
-    if (!locked) {
-        anime({
-            targets: selector,
-            width: "550px",
-            easing: 'easeOutElastic(1, .3)',
-            direction: "backwards",
-            loop: false,
-            duration: 100
-        }).finsished;
-    }
-}).on('mouseleave', '.hoverFix', function (event) {
-    if (!locked) {
-        var selector = getClassNameFromObj($(this).find(".option"));
-        anime({
-            targets: selector,
-            width: "600px", // -> from '28px' to '100%',
-            easing: "easeInOutQuad",
-            direction: "backwards",
-            loop: false,
-            duration: 100
-        }).finsished;
-    }
-})
 
-function getClassNameFromObj(el) {
-    if (el.length == 0) return false;
-    var className = el[0].className;
-    var selector = "." + className.replace(" ", ".");
-    return selector;
-};
+////////////////////////////////////////////////////////////////
 
-function openMenu(closeMenu, closedItself) {
-    console.log("open menu");
-    console.log("Did I close myself: " + !closedItself);
+function openMenu(menuNumber, closedItself) {
+
     if (!closedItself) {
-
-        var menuNumber = "." + $(closeMenu).parent().parent()[0].className.split(" ")[0]
+        // var menuNumber = "." + $(closeMenu).parent().parent()[0].className.split(" ")[0]
         var tl = anime.timeline({
             easing: "easeOutExpo",
             duration: 600,
@@ -225,150 +247,107 @@ function openMenu(closeMenu, closedItself) {
                 opacity: 1,
             })
             .add({
-                    targets: menuNumber + " .extend_option",
-                    width: "500px",
-                    easing: 'easeOutElastic(1, .6)'
-                },
-                "-=500"
-            );
+                targets: menuNumber + " .extend_option",
+                width: "500px",
+                easing: 'easeOutElastic(1, .6)'
+            },"-=500");
     }
 };
 
-var closeMenuAfterSelection = function (singleMenu, listMenu) {
-    debugger;
-}
-
-jQuery(document).on('click', '.option2', function (el) {
-    //move selected to bottom
-
-    const currentTarget = jQuery(el.currentTarget);
-    const parentParent = currentTarget.parent().parent();
-    const activeMenu = jQuery('.activeMenu');
-
-    const clickTarget = getClassNameFromObj(currentTarget);
-    const parentClickTarget = getClassNameFromObj(parentParent);
-    const secondMenu = getClassNameFromObj(currentTarget.parent());
-    const optionIndex = currentTarget.index() + 1;
-    const fullOptionIndex = parentParent.index() + 2;
-
-
-    var translateY = (jQuery('.activeMenu').offset().top - jQuery(parentClickTarget + " " + clickTarget).offset().top - ((optionIndex * 24) + 10) + (fullOptionIndex * 5) + 100);
-    var test2 = (jQuery('.activeMenu').offset().top - jQuery(parentClickTarget + " " + clickTarget).offset().top - ((optionIndex * 24) + 10) + (fullOptionIndex * 7) + 100);
+function openWarningMenu(menuNumber){
 
     var tl = anime.timeline({
-        duration: 1000,
+        easing: "easeOutExpo",
+        duration: 600,
         complete: function () {
-            //reset menu
-            closeMenuAfterSelection(secondMenu, clickTarget);
+            jQuery(menuNumber + " .option").addClass("fullopen")
+            flipUpSecondary(menuNumber);
         }
     });
+    var translateY = (jQuery('.activeMenu').offset().top - jQuery(".warning").offset().top - ((1 * 24) + 10) + (1 * 5) + 100);
 
     tl.add({
-            targets: parentClickTarget + " " + clickTarget,
-            translateX: "15%",
-            easing: "easeOutCubic"
+            targets: menuNumber + " .option",
+            width: "800px",
+            easing: "easeInElastic(1, .6)"
         }).add({
-            targets: parentClickTarget + " " + clickTarget,
+            targets: menuNumber + " .extend_option",
+            opacity: 1,
+        }).add({
+            targets: menuNumber + " .extend_option",
+            width: "500px",
+            easing: 'easeOutCubic'
+        }).add({
+            targets: menuNumber + " .extend_option",
+            keyframes: [
+                { rotateZ: 0 },
+                { rotateZ: -3 },
+                { rotateZ: 0 },
+                { rotateZ: 3 }, // Add additional keyframes as needed
+                { rotateZ: 0 }
+            ],
+            duration: 700 // Adjust the duration as needed
+        }).add({
+            targets: menuNumber + " .extend_option",
+            translateX: "15%",
+            easing:  "easeOutExpo"
+        }).add({
+            targets: menuNumber + " .extend_option",
             translateY: translateY,
             easing: "easeOutCubic"
-        })
-        .add({
-            targets: parentClickTarget + " " + clickTarget,
-            translateY: test2,
-            easing: "easeOutCubic"
-        })
-        .add({
-            targets: parentClickTarget + " " + clickTarget,
-            translateX: "-70vw",
-            easing: "easeOutCubic"
-        })
-        .add({
+        }).add({
             targets: ".view",
-            opacity: "1"
-        })
-    // .add({
-    //     targets: ".background",
-    //     translateY: "-85vh",
-    //     easing: "easeInOutCubic"
-    // }).add({
-    //     targets: ".view",
-    //     height: "85vh",
-    //     easing: "easeInOutCubic"
-    // })
-    //move entire menu up
-})
-
+            opacity: 1,
+            easing: "easeOutCubic", 
+            begin: function(anim) {
+                moveOptionToView(menuNumber + " .extend_option");
+            }
+        }).add({
+            targets: "body, html", // Animate the scrollTop property of the body or html
+            scrollTop: jQuery('.view').offset().top,
+        }, "-=500")
+}
 function flipUpSecondary(menu) {
-    console.log("FLIPPIGN OUT")
-
-    var subOptions = menu + " .secondary_list .option2"
-
     var tl = anime.timeline({
-        duration: 500,
+        duration: 400,
         complete: function () {
-
+            console.log("Animation complete");
         }
     });
 
+    var subOptions = menu + " .secondary_list .option2";
+    // Select all .option2 elements within .secondary_list
+    var allOptions = document.querySelectorAll(subOptions);
 
-    tl.add({
-            targets: subOptions + ".orange",
+    // Loop through each .option2 element and create animations
+    allOptions.forEach(function (option, index) {
+        // Define the target selector for the current option
+        var targetSelector = subOptions + "." + option.classList[1];
+
+        // Get the actual height of the current .option2 element
+        var optionHeight = option.offsetHeight + 5;
+
+        // Add animations to the timeline
+        tl.add({
+            targets: targetSelector,
             opacity: 0,
         }).add({
-            targets: subOptions + ".orange",
-            translateX: "125px",
-            easing: 'easeInOutSine',
+            targets: targetSelector,
             opacity: 1,
-        })
-        .add({
-            targets: subOptions + ".orange",
-            translateY: "-25px"
-        }, "-=300")
-        .add({
-            targets: subOptions + ".orange",
-            translateX: "-50px"
-        }, "-=200")
-        .add({
-            targets: subOptions + ".red",
-            translateX: "125px",
-            opacity: 1
-        })
-        .add({
-            targets: subOptions + ".red",
-            translateY: "-50px"
-        }, "-=300")
-        .add({
-            targets: subOptions + ".red",
-            translateX: "-50px"
-        }, "-=200")
-        .add({
-            targets: subOptions + ".purple",
-            translateX: "130px",
-            opacity: 1,
-        }, "-=200")
-        .add({
-            targets: subOptions + ".purple",
-            translateY: "-75px"
-        }, "-=200")
-        .add({
-            targets: subOptions + ".purple",
-            translateX: "-50px"
-        }, "-=200")
-        .add({
-            targets: subOptions + ".teal",
-            translateX: "130px",
-            opacity: 1
-        }, "-=200")
-        .add({
-            targets: subOptions + ".teal",
-            translateY: "-100px"
-        }, "-=200")
-        .add({
-            targets: subOptions + ".teal",
-            translateX: "-50px"
-        }, "-=200")
+            translateX: 125, // Adjust this value based on your preference
+            easing: 'easeOutQuad' // Use linear easing
+        }, "-=300").add({
+            targets: targetSelector,
+            translateY: [-optionHeight * (index + 1), 0],
+            easing: 'easeOutQuad',
+        }).add({
+            targets: targetSelector,
+            translateX: -50, // Adjust this value based on your preference
+            easing: 'easeOutQuad' // Use linear easing
+        }, "-=350");
+    });
+}
 
-};
 
 function removeFlipUp(closeMenu, closedItself) {
     var menuNumber = "." + $(closeMenu).parent().parent()[0].className.split(" ")[0]
@@ -394,7 +373,6 @@ function removeFlipUp(closeMenu, closedItself) {
                     jQuery(menuNumber + ' .option2').each(function (_, i) {
                         jQuery(i).css('opacity', 0);
                         jQuery(i).removeClass("sticky");
-                        jQuery(i).css('visibility', 'hidden');
                     })
 
                     locked = false;
@@ -408,17 +386,12 @@ function removeFlipUp(closeMenu, closedItself) {
             t2.add({
                     targets: menuNumber + " .option",
                     width: "550px",
-                    easing: "spring(1, 100, 70, 0)"
+                    easing: 'easeOutElastic(1, .6)'
                 }, "-=200")
                 .add({
-                    targets: [subOptions + ".orange", subOptions + ".red", subOptions + ".purple", subOptions + ".teal"],
-                    translateY: "800px",
-                    easing: "easeOutExpo"
-                }).add({
-                    targets: [subOptions + ".orange", subOptions + ".red", subOptions + ".purple", subOptions + ".teal"],
+                    targets: [subOptions + ".green", subOptions + ".orange", subOptions + ".red", subOptions + ".purple", subOptions + ".teal"],
                     translateY: "750px",
-                    easing: "easeInExpo",
-                    duration: 500
+                    easing: 'easeOutElastic(1, .6)',
                 }).add({
                     targets: menuNumber + " .option",
                     width: "600px",
@@ -426,8 +399,6 @@ function removeFlipUp(closeMenu, closedItself) {
                 })
         }
     });
-
-    // var menuNumber = "." + $(closeMenu).parent().parent()[0].className.split(" ")[0]
 
     tl.add({
         targets: menuNumber + " .extend_option",
@@ -438,5 +409,156 @@ function removeFlipUp(closeMenu, closedItself) {
     }, "-=400")
 
 };
+
+
+////////////////////////////////////////////////////////////////
+
+
+// EVENTS
+
+
+////////////////////////////////////////////////////////////////
+
+
+$(document).on('mouseenter', '.hoverFix', function (event) {
+    var selector = getClassNameFromObj($(this).find(".option"));
+    if (!locked) {
+        anime({
+            targets: selector,
+            width: "550px",
+            easing: 'easeOutElastic(1, .3)',
+            direction: "backwards",
+            loop: false,
+            duration: 100
+        }).finsished;
+    }
+}).on('mouseleave', '.hoverFix', function (event) {
+    if (!locked) {
+        var selector = getClassNameFromObj($(this).find(".option"));
+        anime({
+            targets: selector,
+            width: "600px", // -> from '28px' to '100%',
+            easing: "easeInOutQuad",
+            direction: "backwards",
+            loop: false,
+            duration: 100
+        }).finished;
+    }
+})
+
+
+//hide any maxed option
+//if not current max
+//open clicked
+jQuery(document).on("click", ".hoverFix .option", function () {
+    console.log("are we locked");
+    console.log(locked);
+
+    //if open already. close itself
+    //if another open, close the opened
+    var closeMenu = $(this);
+    if (!locked) {
+        locked = true;
+        var menuNumber = "." + $(closeMenu).parent().parent()[0].className.split(" ")[0]
+        
+        if(jQuery(menuNumber).find('.extend_option.warning').length > 0){
+            openWarningMenu(menuNumber);
+        } else {
+            openMenu(menuNumber, false);
+        }
+    } else if (locked && $(this).hasClass("fullopen")) {
+        removeFlipUp(closeMenu, true);
+    }
+
+});
+
+
+
+jQuery(document).on('click', '.option2:not(.grey)', function (el) {
+    //move selected to bottom
+    locked = false;
+    const currentTarget = jQuery(el.currentTarget);
+    const parentParent = currentTarget.parent().parent();
+
+    const clickTarget = getClassNameFromObj(currentTarget);
+    const parentClickTarget = getClassNameFromObj(parentParent);
+    const optionIndex = currentTarget.index() + 1;
+    const fullOptionIndex = parentParent.index() + 2;
+    const optionParent = parentClickTarget + " " + clickTarget;
+
+    selectedOptionFinal.target = currentTarget;
+    selectedOptionFinal.position = currentTarget.closest('.secondary_list').find('.option2:not(.extend_option)').index(currentTarget);
+    selectedOptionFinal.parent = currentTarget.closest('.secondary_list')
+
+    var translateY = (jQuery('.activeMenu').offset().top - jQuery(optionParent).offset().top - ((optionIndex * 24) + 10) + (fullOptionIndex * 5) + 100);
+
+    var tl = anime.timeline({
+        duration: 1000,
+        complete: function () {
+            // moveOptionToView(optionParent);
+            //reset menu
+            closeMenuAfterSelection(parentParent, clickTarget);
+        }
+    });
+
+    tl.add({
+        targets: optionParent,
+        translateX: "15%",
+        easing: "easeOutCubic"
+    }).add({
+        targets: optionParent,
+        translateY: translateY,
+        easing: "easeOutCubic"
+    }).add({
+        targets: ".view",
+        opacity: 1,
+        easing: "easeOutCubic", 
+        begin: function(anim) {
+            moveOptionToView(optionParent);
+        }
+    }).add({
+        targets: "body, html", // Animate the scrollTop property of the body or html
+        scrollTop: jQuery('.view').offset().top,
+    }, "-=500")
+
+
+
+    jQuery(this).addClass("selected");
+    //move entire menu up
+})
+
+jQuery(document).on('click', '.option2.grey', function () {
+
+    var selectedOption = selectedOptionFinal.target || false;
+    var optinSelector = getClassNameFromObj(selectedOption);
+
+    var t1 = anime.timeline({
+        duration: 500,
+        complete: function () {
+            jQuery('.option2.grey').css('transform', 'none');
+
+            selectedOptionFinal.target.appendTo(jQuery(selectedOptionFinal.parent)).insertAfter(jQuery(selectedOptionFinal.parent.find('.option2')).eq(selectedOptionFinal.position))
+            selectedOptionFinal.target.removeClass('selected');
+            selectedOptionFinal.target.removeAttr("style");
+            selectedOptionFinal.target.css({
+                'opacity': 0,
+                'backface-visibility': 'hidden'
+            })
+
+            locked = false;
+        }
+    });
+
+
+    t1.add({
+        targets: ['.option2.grey', optinSelector],
+        translateX: "-400px",
+        easing: "easeOutExpo"
+    }).add({
+        targets: "body, html", // Animate the scrollTop property of the body or html
+        scrollTop: jQuery('.background').offset().top,
+        easing: "easeInElastic(1, .6)"
+    })
+})
 
 start();
