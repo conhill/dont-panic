@@ -2,13 +2,11 @@
 const anime = require('animejs');
 
 let locked = false;
-let startingAnimationDone = false;
 let selectedOptionFinal = {
     target: undefined,
     position: 0,
     parent: undefined
 };
-
 let animationCount = 0;
 
 ////////////////////////////////////////////////////////////////
@@ -18,6 +16,7 @@ let animationCount = 0;
 
 
 ////////////////////////////////////////////////////////////////
+
 function getRandomRotation() {
     return Math.random() <= 0.5 ? "180" : "-180";
 }
@@ -52,11 +51,8 @@ function getClassNameFromObj(el) {
 }
 
 function moveOptionToView(targetEl) {
-    //30
     var rightDist = '75px';
-    // if(jQuery(targetEl).width() > 100){
-    //     rightDist = '45px'
-    // }
+
     jQuery(targetEl)
         .appendTo('.activeMenu')
         .insertAfter('.activeMenu .option2.grey')
@@ -73,7 +69,7 @@ var closeMenuAfterSelection = function (singleMenu, listMenu) {
     var option2Selector = singleMenuClass + ' .option2:not(".selected")';
     var extendedOptionSelector = singleMenuClass + ' .extend_option';
     var optionSelector = singleMenuClass + ' .option';
-// debugger;
+
     jQuery(option2Selector).css({
         'opacity': 0,
         'transform': 'none'
@@ -314,6 +310,7 @@ function openWarningMenu(menuNumber){
             scrollTop: jQuery('.view').offset().top,
         }, "-=500")
 }
+
 function flipUpSecondary(menu) {
     var tl = anime.timeline({
         duration: 400,
@@ -377,7 +374,6 @@ function removeFlipUp(closeMenu, closedItself) {
                     console.log("removed flip up complete 2")
 
                     //hide after collapse
-                    debugger;
                     jQuery(menuNumber + ' .option2').each(function (_, i) {
                         jQuery(i).css('opacity', 0);
                         jQuery(i).css('transform', 'none')
