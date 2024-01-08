@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Seconda';
-  src: url("../fonts/SecondaRound-Regular.ttf");
+  src: url("../fonts/SecondaRound-Bold.ttf");
 }
 
 $menus: (first: #584fac,
@@ -13,11 +13,14 @@ $menus: (first: #584fac,
 $colors: (orange: #ae6d13,
   teal: #26b095,
   blue: #1a69b1,
-  purple: #5b51aa,
+  lightblue: #5594cb,
+  purple: #3f489c,
   red: #8e343e,
+  lightred: #a43b50,
   darkpurple: #6c2456,
   green: #4d9d2e,
-  grey: #333333
+  grey: #333333,
+  warning: #AE1F13
 );
 
 
@@ -32,7 +35,7 @@ $menu_keys: map-keys($menus);
       background: $color;
       width: 173px;
       border-radius: 360px;
-      height: 24px;
+      height: 30px;
       display: inline-block !important;
       position: absolute;
       z-index: ($menu_index * 10);
@@ -54,8 +57,10 @@ $value in $colors {
 }
 
 /* yellow: #ffb400 */
+/* #ca9a2c */
+/* #b7882b */
 span {
-  color: white;
+  color: #ca9a2c;
   font-family: 'Seconda', Sans-serif;
 }
 
@@ -98,6 +103,7 @@ body {
 .hoverFix {
   display: inline-block;
   min-width: 600px;
+  user-select: none;
 }
 
 body.background {
@@ -108,7 +114,7 @@ body.background {
   width: 600px;
   border-radius: 360px;
   // border: 2px solid black;
-  height: 20px;
+  height: 25px;
   text-align: right;
   display: inline-block !important;
   right: 20px;
@@ -129,6 +135,15 @@ body.background {
   transform: translateX(-25px);
 }
 
+.activeOption .warning{
+  display: inline-block;
+  text-align: right;
+  background-color:map-get($colors, warning);
+  height:20px;
+  border: 2px solid map-get($colors, warning);
+  border-radius: 360px;
+}
+
 .rollout.hide {
   display: none !important;
 }
@@ -142,8 +157,8 @@ body.background {
 }
 
 .circle {
-  width: 24px;
-  height: 24px;
+  width: 29px;
+  height: 29px;
   position: absolute;
   background: red;
   color: red;
@@ -156,11 +171,16 @@ body.background {
   position: relative;
   //top: -8px;
   right: 40px;
+  font-size:20px;
+  line-height: 25px; 
+  vertical-align: middle;
 }
 .activeOption span {
   position: relative;
   //top: -8px;
   right: 40px;
+  line-height: 25px; 
+  vertical-align: middle;
 }
 
 .space {
@@ -272,7 +292,7 @@ body.background {
   z-index: 2;
   text-align: right;
   border-radius: 360px;
-  height: 20px;
+  height: 25px;
   border: 2px solid pink;
   overflow: hidden;
 }
@@ -281,7 +301,7 @@ body.background {
   position: absolute;
   width: 175px;
   right: 0px;
-  height: 20px;
+  height: 25px;
   display: block;
   text-align: right;
   top: 0px;
@@ -390,29 +410,68 @@ body.background {
   }
 }
 
-  .about-text {
-    padding: 20px;
-    box-sizing: border-box;
-    color: white;
-    font-family: 'Seconda', Sans-serif;
-    width: 60%;
-    overflow-y: hidden; // Add this if you want the text to be scrollable
+.about-text {
+  padding: 20px;
+  box-sizing: border-box;
+  color: white;
+  font-family: 'Seconda', Sans-serif;
+  width: 60%;
+  overflow-y: hidden; // Add this if you want the text to be scrollable
+
+  @media only screen and (max-width: 768px) {
+    width: 100%;
   }
-.about-text{
+
   h1 {
-    font-size: 5em;
-    margin-bottom: 10px;
+    font-size: 3.5em;
+    margin: 10px 0;
+
+
+    @media only screen and (max-width: 768px) {
+      font-size: 2.5em;
+    }
+    @media only screen and (max-width: 1024px) {
+      font-size: 3em;
+    }
   }
+
   h2 {
-    font-size:3em;
+    font-size: 3em;
+    margin: 10px 0;
+
+    @media only screen and (max-width: 768px) {
+      font-size: 2em;
+    }
+    @media only screen and (max-width: 1024px) {
+      font-size: 2.5em;
+    }
   }
+
   h3 {
-    font-size:2em;
+    font-size: 2em;
     color: #fc9057;
+    margin: 10px 0;
+
+    @media only screen and (max-width: 768px) {
+      font-size: 1.5em;
+    }
+    @media only screen and (max-width: 1024px) {
+      font-size: 1.75em;
+    }
   }
+
   p {
-    font-size: 1.5em;
+    font-size: 1.25em;
+    margin: 10px 0;
+
+    @media only screen and (max-width: 768px) {
+      font-size: 1em;
+    }
+    @media only screen and (max-width: 1024px) {
+      font-size: 1em;
+    }
   }
+
   .blue-text {
     color: #63b4ba;
   }

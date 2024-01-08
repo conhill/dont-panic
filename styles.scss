@@ -74,6 +74,7 @@ body {
 .hoverFix {
   display: inline-block;
   min-width: 600px;
+  user-select: none;
 }
 
 body.background {

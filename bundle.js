@@ -52,6 +52,11 @@ function getClassNameFromObj(el) {
 }
 
 function moveOptionToView(targetEl) {
+    //30
+    var rightDist = '75px';
+    // if(jQuery(targetEl).width() > 100){
+    //     rightDist = '45px'
+    // }
     jQuery(targetEl)
         .appendTo('.activeMenu')
         .insertAfter('.activeMenu .option2.grey')
@@ -59,7 +64,7 @@ function moveOptionToView(targetEl) {
             'align-self': 'flex-start',
             'position': 'relative',
             'transform': 'none',
-            'right': '70px'
+            'right': rightDist
         });
 }
 
@@ -68,9 +73,10 @@ var closeMenuAfterSelection = function (singleMenu, listMenu) {
     var option2Selector = singleMenuClass + ' .option2:not(".selected")';
     var extendedOptionSelector = singleMenuClass + ' .extend_option';
     var optionSelector = singleMenuClass + ' .option';
-
+// debugger;
     jQuery(option2Selector).css({
-        'opacity': 0
+        'opacity': 0,
+        'transform': 'none'
     }).removeClass("sticky");
 
     jQuery(optionSelector).removeClass('fullopen').css('width', '600px');
@@ -326,7 +332,7 @@ function flipUpSecondary(menu) {
         var targetSelector = subOptions + "." + option.classList[1];
 
         // Get the actual height of the current .option2 element
-        var optionHeight = option.offsetHeight + 5;
+        var optionHeight = option.offsetHeight + 3;
 
         // Add animations to the timeline
         tl.add({
@@ -340,7 +346,7 @@ function flipUpSecondary(menu) {
         }, "-=300").add({
             targets: targetSelector,
             translateY: [-optionHeight * (index + 1), 0],
-            easing: 'easeOutQuad',
+            easing: 'linear'
         }).add({
             targets: targetSelector,
             translateX: -50, // Adjust this value based on your preference
@@ -371,8 +377,10 @@ function removeFlipUp(closeMenu, closedItself) {
                     console.log("removed flip up complete 2")
 
                     //hide after collapse
+                    debugger;
                     jQuery(menuNumber + ' .option2').each(function (_, i) {
                         jQuery(i).css('opacity', 0);
+                        jQuery(i).css('transform', 'none')
                         jQuery(i).removeClass("sticky");
                     })
 
@@ -475,7 +483,7 @@ jQuery(document).on("click", ".hoverFix .option", function () {
 
 
 
-jQuery(document).on('click', '.option2:not(.grey)', function (el) {
+jQuery(document).on('click', '.secondary_list .option2:not(.grey)', function (el) {
     //move selected to bottom
     locked = false;
     const currentTarget = jQuery(el.currentTarget);
@@ -536,7 +544,7 @@ jQuery(document).on('click', '.option2.grey', function () {
     var t1 = anime.timeline({
         duration: 500,
         complete: function () {
-            jQuery('.option2.grey').css('transform', 'none');
+            jQuery('.option2.grey').css('transform', 'translateX(-25px)');
 
             selectedOptionFinal.target.appendTo(jQuery(selectedOptionFinal.parent)).insertAfter(jQuery(selectedOptionFinal.parent.find('.option2')).eq(selectedOptionFinal.position))
             selectedOptionFinal.target.removeClass('selected');
@@ -565,8 +573,8 @@ jQuery(document).on('click', '.option2.grey', function () {
 start();
 },{"animejs":2}],2:[function(require,module,exports){
 /*
- * anime.js v3.2.1
- * (c) 2020 Julian Garnier
+ * anime.js v3.2.2
+ * (c) 2023 Julian Garnier
  * Released under the MIT license
  * animejs.com
  */
@@ -795,6 +803,7 @@ var penner = (function () {
 
   var functionEasings = {
     Sine: function () { return function (t) { return 1 - Math.cos(t * Math.PI / 2); }; },
+    Expo: function () { return function (t) { return t ? Math.pow(2, 10 * t - 10) : 0; }; },
     Circ: function () { return function (t) { return 1 - Math.sqrt(1 - t * t); }; },
     Back: function () { return function (t) { return t * t * (3 * t - 2); }; },
     Bounce: function () { return function (t) {
@@ -815,7 +824,7 @@ var penner = (function () {
     }
   };
 
-  var baseEasings = ['Quad', 'Cubic', 'Quart', 'Quint', 'Expo'];
+  var baseEasings = ['Quad', 'Cubic', 'Quart', 'Quint'];
 
   baseEasings.forEach(function (name, i) {
     functionEasings[name] = function () { return function (t) { return Math.pow(t, i + 2); }; };
