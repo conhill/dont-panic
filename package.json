@@ -12,7 +12,8 @@
   "dependencies": {
     "animejs": "^3.2.1",
     "browserify": "^17.0.0",
-    "node-sass": "^7.0.3"
+    "http-server": "^14.1.1",
+    "node-sass": "^9.0.0"
   },
   "devDependencies": {
     "sass": "^1.53.0"

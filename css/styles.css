@@ -1,12 +1,12 @@
 @font-face {
   font-family: 'Seconda';
-  src: url("../fonts/SecondaRound-Regular.ttf"); }
+  src: url("../fonts/SecondaRound-Bold.ttf"); }
 
 .firstMenu .rollout {
   background: #584fac;
   width: 173px;
   border-radius: 360px;
-  height: 24px;
+  height: 30px;
   display: inline-block !important;
   position: absolute;
   z-index: 10; }
@@ -15,7 +15,7 @@
   background: #27b092;
   width: 173px;
   border-radius: 360px;
-  height: 24px;
+  height: 30px;
   display: inline-block !important;
   position: absolute;
   z-index: 20; }
@@ -24,7 +24,7 @@
   background: #4d9d2e;
   width: 173px;
   border-radius: 360px;
-  height: 24px;
+  height: 30px;
   display: inline-block !important;
   position: absolute;
   z-index: 30; }
@@ -33,7 +33,7 @@
   background: #ab6a0e;
   width: 173px;
   border-radius: 360px;
-  height: 24px;
+  height: 30px;
   display: inline-block !important;
   position: absolute;
   z-index: 40; }
@@ -42,7 +42,7 @@
   background: #8e343e;
   width: 173px;
   border-radius: 360px;
-  height: 24px;
+  height: 30px;
   display: inline-block !important;
   position: absolute;
   z-index: 50; }
@@ -51,7 +51,7 @@
   background: #6d2356;
   width: 173px;
   border-radius: 360px;
-  height: 24px;
+  height: 30px;
   display: inline-block !important;
   position: absolute;
   z-index: 60; }
@@ -77,11 +77,18 @@
     background: #134f85;
     z-index: 5; }
 
+.lightblue {
+  background: #5594cb;
+  border: 2px solid #5594cb; }
+  .lightblue .circle {
+    background: #387bb5;
+    z-index: 5; }
+
 .purple {
-  background: #5b51aa;
-  border: 2px solid #5b51aa; }
+  background: #3f489c;
+  border: 2px solid #3f489c; }
   .purple .circle {
-    background: #494187;
+    background: #303778;
     z-index: 5; }
 
 .red {
@@ -89,6 +96,13 @@
   border: 2px solid #8e343e; }
   .red .circle {
     background: #69262e;
+    z-index: 5; }
+
+.lightred {
+  background: #a43b50;
+  border: 2px solid #a43b50; }
+  .lightred .circle {
+    background: #7e2e3e;
     z-index: 5; }
 
 .darkpurple {
@@ -112,9 +126,18 @@
     background: #1a1a1a;
     z-index: 5; }
 
+.warning {
+  background: #AE1F13;
+  border: 2px solid #AE1F13; }
+  .warning .circle {
+    background: #80170e;
+    z-index: 5; }
+
 /* yellow: #ffb400 */
+/* #ca9a2c */
+/* #b7882b */
 span {
-  color: white;
+  color: #ca9a2c;
   font-family: 'Seconda', Sans-serif; }
 
 body, html {
@@ -148,7 +171,8 @@ body {
 
 .hoverFix {
   display: inline-block;
-  min-width: 600px; }
+  min-width: 600px;
+  user-select: none; }
 
 body.background {
   background-color: #8c4253; }
@@ -156,7 +180,7 @@ body.background {
 .option {
   width: 600px;
   border-radius: 360px;
-  height: 20px;
+  height: 25px;
   text-align: right;
   display: inline-block !important;
   right: 20px;
@@ -172,6 +196,14 @@ body.background {
   display: inline-block;
   right: 20px;
   transform: translateX(-25px); }
+
+.activeOption .warning {
+  display: inline-block;
+  text-align: right;
+  background-color: #AE1F13;
+  height: 20px;
+  border: 2px solid #AE1F13;
+  border-radius: 360px; }
 
 .rollout.hide {
   display: none !important; }
@@ -193,8 +225,8 @@ body.background {
   left: 235px; }
 
 .circle {
-  width: 24px;
-  height: 24px;
+  width: 29px;
+  height: 29px;
   position: absolute;
   background: red;
   color: red;
@@ -204,11 +236,16 @@ body.background {
 
 .allMenus span {
   position: relative;
-  right: 40px; }
+  right: 40px;
+  font-size: 20px;
+  line-height: 25px;
+  vertical-align: middle; }
 
 .activeOption span {
   position: relative;
-  right: 40px; }
+  right: 40px;
+  line-height: 25px;
+  vertical-align: middle; }
 
 .space {
   flex: 1; }
@@ -290,7 +327,7 @@ body.background {
   z-index: 2;
   text-align: right;
   border-radius: 360px;
-  height: 20px;
+  height: 25px;
   border: 2px solid pink;
   overflow: hidden; }
 
@@ -298,7 +335,7 @@ body.background {
   position: absolute;
   width: 175px;
   right: 0px;
-  height: 20px;
+  height: 25px;
   display: block;
   text-align: right;
   top: 0px;
@@ -391,23 +428,48 @@ body.background {
   font-family: 'Seconda', Sans-serif;
   width: 60%;
   overflow-y: hidden; }
-
-.about-text h1 {
-  font-size: 5em;
-  margin-bottom: 10px; }
-
-.about-text h2 {
-  font-size: 3em; }
-
-.about-text h3 {
-  font-size: 2em;
-  color: #fc9057; }
-
-.about-text p {
-  font-size: 1.5em; }
-
-.about-text .blue-text {
-  color: #63b4ba; }
+  @media only screen and (max-width: 768px) {
+    .about-text {
+      width: 100%; } }
+  .about-text h1 {
+    font-size: 3.5em;
+    margin: 10px 0; }
+    @media only screen and (max-width: 768px) {
+      .about-text h1 {
+        font-size: 2.5em; } }
+    @media only screen and (max-width: 1024px) {
+      .about-text h1 {
+        font-size: 3em; } }
+  .about-text h2 {
+    font-size: 3em;
+    margin: 10px 0; }
+    @media only screen and (max-width: 768px) {
+      .about-text h2 {
+        font-size: 2em; } }
+    @media only screen and (max-width: 1024px) {
+      .about-text h2 {
+        font-size: 2.5em; } }
+  .about-text h3 {
+    font-size: 2em;
+    color: #fc9057;
+    margin: 10px 0; }
+    @media only screen and (max-width: 768px) {
+      .about-text h3 {
+        font-size: 1.5em; } }
+    @media only screen and (max-width: 1024px) {
+      .about-text h3 {
+        font-size: 1.75em; } }
+  .about-text p {
+    font-size: 1.25em;
+    margin: 10px 0; }
+    @media only screen and (max-width: 768px) {
+      .about-text p {
+        font-size: 1em; } }
+    @media only screen and (max-width: 1024px) {
+      .about-text p {
+        font-size: 1em; } }
+  .about-text .blue-text {
+    color: #63b4ba; }
 
 .warning {
   transform-origin: left center; }
