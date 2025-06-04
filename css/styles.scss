@@ -1,7 +1,8 @@
 @font-face {
   font-family: 'Seconda';
-  src: url("../fonts/SecondaRound-Regular.ttf");
+  src: url("../fonts/SecondaRound-Bold.ttf");
 }
+
 
 $menus: (first: #584fac,
   second: #27b092,
@@ -13,10 +14,14 @@ $menus: (first: #584fac,
 $colors: (orange: #ae6d13,
   teal: #26b095,
   blue: #1a69b1,
-  purple: #5b51aa,
+  lightblue: #5594cb,
+  purple: #3f489c,
   red: #8e343e,
+  lightred: #a43b50,
   darkpurple: #6c2456,
   green: #4d9d2e,
+  grey: #333333,
+  warning: #AE1F13
 );
 
 
@@ -31,7 +36,7 @@ $menu_keys: map-keys($menus);
       background: $color;
       width: 173px;
       border-radius: 360px;
-      height: 24px;
+      height: 30px;
       display: inline-block !important;
       position: absolute;
       z-index: ($menu_index * 10);
@@ -41,7 +46,7 @@ $menu_keys: map-keys($menus);
 
 @each $color,
 $value in $colors {
-  .#{$color} {
+  .#{"" + $color} {
     background: $value;
     border: 2px solid $value;
 
@@ -53,27 +58,53 @@ $value in $colors {
 }
 
 /* yellow: #ffb400 */
+/* #ca9a2c */
+/* #b7882b */
 span {
-  color: white;
+  color: #ca9a2c;
   font-family: 'Seconda', Sans-serif;
 }
 
-body .background {
-  background: #b7882b;
-  height: 100vh;
-  width: 100vw;
-  position: absolute;
-  overflow-y: hidden;
+body, html {
+  height: 100%;
+  margin: 0;
 }
 
 body {
   margin: 0;
   padding: 0;
+  transform-style: preserve-3d;
+  // overflow: hidden;
+}
+
+
+.background {
+  background: #b7882b;
+  height: 100vh;
+  width: 100vw;
+  position: relative; /* Change this to relative */
+  // overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Remove redundant body.background style */
+
+.view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+  order: 1;
+  margin-top: auto;
+  z-index: 2; // Set a higher z-index
 }
 
 .hoverFix {
   display: inline-block;
   min-width: 600px;
+  user-select: none;
 }
 
 body.background {
@@ -84,7 +115,7 @@ body.background {
   width: 600px;
   border-radius: 360px;
   // border: 2px solid black;
-  height: 20px;
+  height: 25px;
   text-align: right;
   display: inline-block !important;
   right: 20px;
@@ -98,6 +129,26 @@ body.background {
   z-index: 1000;
 }
 
+.activeOption{
+  display: flex;
+  align-items: center;
+}
+.activeOption .option2{
+  position:relative;
+  display:inline-block;
+  right: 20px;
+  // transform: translateX(-25px);
+  transform: translateY(0) translateX(125px);
+}
+
+.activeOption .warning{
+  display: inline-block;
+  text-align: right;
+  background-color:map-get($colors, warning);
+  height:20px;
+  border: 2px solid map-get($colors, warning);
+  border-radius: 360px;
+}
 
 .rollout.hide {
   display: none !important;
@@ -112,8 +163,8 @@ body.background {
 }
 
 .circle {
-  width: 24px;
-  height: 24px;
+  width: 29px;
+  height: 29px;
   position: absolute;
   background: red;
   color: red;
@@ -122,24 +173,49 @@ body.background {
   border-radius: 360px;
 }
 
-span {
+.allMenus span {
   position: relative;
   //top: -8px;
   right: 40px;
+  font-size:20px;
+  line-height: 25px; 
+  vertical-align: middle;
+}
+.activeOption span {
+  position: relative;
+  //top: -8px;
+  right: 40px;
+  line-height: 25px; 
+  vertical-align: middle;
 }
 
 .space {
-  height: 50%;
+  // height: 50%;
+  flex: 1;
+}
+
+.space2 {
+  flex: 1;
 }
 
 .option:nth-child(6) {
   background: red;
 }
 
+
 .option.view {
   width: 300px !important;
   visibility: visible;
+}
 
+.view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+  order: 1;
+  margin-top: auto;
 }
 
 .secondary_list {
@@ -222,15 +298,16 @@ span {
   z-index: 2;
   text-align: right;
   border-radius: 360px;
-  height: 20px;
+  height: 25px;
   border: 2px solid pink;
+  overflow: hidden;
 }
 
 .option2 {
   position: absolute;
   width: 175px;
   right: 0px;
-  height: 20px;
+  height: 25px;
   display: block;
   text-align: right;
   top: 0px;
@@ -238,7 +315,7 @@ span {
   font-family: Sans-serif;
   border-radius: 360px;
   transition: all 0.1s ease-out;
-  z-index:10;
+  z-index: 10000; // Set a higher value than .view
 
   span {
     &.flipup {
@@ -283,13 +360,134 @@ span {
 
 .allMenus {
   position: relative;
+  align-self: start;
+}
+
+.view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+  order: 1;
+  margin-top: auto;
+  z-index: 2; // Set a higher z-index
 }
 
 .activeMenu {
-  background: red;
+  background: #b7882b;
   height: 200px;
   width: 100vw;
   overflow-y: hidden;
-  position: fixed;
   bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; // Center content horizontally
 }
+
+.space,
+.space2 {
+  flex: 1; // Use flex to push the content to the edges
+}
+
+.page-info {
+  height: calc(100% - 200px); // Subtract the height of activeMenu
+  background-color: #613655;
+  display: flex;
+  flex-direction: column;
+}
+
+.foreward.info {
+  height: 100%; // Ensure the height doesn't exceed the parent
+  box-sizing: border-box;
+  background-image: url('../images/about-me.png');
+  background-repeat: no-repeat;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
+  display: flex;
+  flex-direction: column;
+  background-color: #451f43;
+
+  .right-image-container {
+    flex: 1;
+    width: 50%;// Set max height to avoid exceeding the container
+  }
+}
+
+.about-text {
+  padding: 20px;
+  box-sizing: border-box;
+  color: white;
+  font-family: 'Seconda', Sans-serif;
+  width: 60%;
+  overflow-y: hidden; // Add this if you want the text to be scrollable
+
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 3.5em;
+    margin: 10px 0;
+
+
+    @media only screen and (max-width: 768px) {
+      font-size: 2.5em;
+    }
+    @media only screen and (max-width: 1024px) {
+      font-size: 3em;
+    }
+  }
+
+  h2 {
+    font-size: 3em;
+    margin: 10px 0;
+
+    @media only screen and (max-width: 768px) {
+      font-size: 2em;
+    }
+    @media only screen and (max-width: 1024px) {
+      font-size: 2.5em;
+    }
+  }
+
+  h3 {
+    font-size: 2em;
+    color: #fc9057;
+    margin: 10px 0;
+
+    @media only screen and (max-width: 768px) {
+      font-size: 1.5em;
+    }
+    @media only screen and (max-width: 1024px) {
+      font-size: 1.75em;
+    }
+  }
+
+  p {
+    font-size: 1.25em;
+    margin: 10px 0;
+
+    @media only screen and (max-width: 768px) {
+      font-size: 1em;
+    }
+    @media only screen and (max-width: 1024px) {
+      font-size: 1em;
+    }
+  }
+
+  .blue-text {
+    color: #63b4ba;
+  }
+}
+
+.warning {
+  transform-origin: left center; 
+}
+
+/*
+    color: #63b4ba;
+    color: #fc9057;
+    */

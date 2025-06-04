@@ -2,13 +2,8 @@
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <!-- <script src="anime.min.js"></script> -->
-    <script type="module">
-        import anime from './anime.min.js'; // Import Anime.js from a local file
-        // Your code that uses Anime.js goes here
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs/lib/anime.iife.min.js"></script>
     <script src="bundle.js"></script>
-    <!-- <script src="index.js"></script> -->
 </head>
 
 <body style="background-color: blue;">
@@ -88,19 +83,7 @@
                     <div class="extend_option" style="opacity: 0">
                         <span>SECTOR ZZ9 PLURAL Z ALPHA</span>
                     </div>
-                    <div class="option2 green" style="opacity: 0"><span>EARTH</span>
-                        <div class="circle"></div>
-                    </div>
-                    <div class="option2 orange" style="opacity: 0"><span>MARS</span>
-                        <div class="circle"></div>
-                    </div>
-                    <div class="option2 red" style="opacity: 0"><span>JUPITER</span>
-                        <div class="circle"></div>
-                    </div>
-                    <div class="option2 purple" style="opacity: 0"><span>SATURN</span>
-                        <div class="circle"></div>
-                    </div>
-                    <div class="option2 teal" style="opacity: 0"><span>PLUTO</span>
+                    <div class="option2 green" style="opacity: 0"><span>New York City</span>
                         <div class="circle"></div>
                     </div>
                 </div>
@@ -149,22 +132,8 @@
                     </div>
                 </div>
                 <div class="secondary_list">
-                    <div class="extend_option" style="opacity: 0">
-                        <span>INTRODUCTION</span>
-                    </div>
-                    <div class="option2 green" style="opacity: 0"><span>WHO</span>
-                        <div class="circle"></div>
-                    </div>
-                    <div class="option2 orange" style="opacity: 0"><span>WHAT</span>
-                        <div class="circle"></div>
-                    </div>
-                    <div class="option2 red" style="opacity: 0"><span>WHERE</span>
-                        <div class="circle"></div>
-                    </div>
-                    <div class="option2 purple" style="opacity: 0"><span>WHY</span>
-                        <div class="circle"></div>
-                    </div>
-                    <div class="option2 teal" style="opacity: 0"><span>HOW</span>
+                    <div class="extend_option warning" style="opacity: 0">
+                        <span>WARNING</span>
                         <div class="circle"></div>
                     </div>
                 </div>
@@ -203,12 +172,66 @@
             </div>
         </div>
         <div class="space2"></div>
-        <div class="activeMenu">
-        
-        </div>
     </div>
     <div class="view">
+        <div class="activeMenu">
+            <div class="space"></div>
+            <div class="activeOption">
+                <div class="option2 grey">
+                    <span>BACK</span>
+                    <div class="circle"></div>
+                </div>
+            </div>
+            <div class="space2"></div>
+        </div>
+        <div class="page-info">
+            <div class="foreward info">
+            <div class="about-text">
+                <h1>Hello! I am <span class="blue-text">Connor Hill</span></h1>
 
-    </div>
+                <div id="professional-info">
+                  <h2> <span class="blue-text">Software Engineer</span> | SAAS Martech Professional</h2>
+            
+                  <p>I am a dedicated Software Engineer contributing to the SAAS Martech and ecommerce landscape</p>
+            
+                  <div id="front-end-section">
+                <h3>Front-End Solutions Architect</h3>
+            
+                <p>In my role, I specialize in constructing seamless front-end solutions for client ecommerce websites. I build functionality and aesthetics align with the my clients highest standards.</p>
+                  </div>
+            
+                  <div id="api-section">
+                <h3>API Integration Specialist</h3>
+            
+                <p>As an API Integration Specialist, I excel in developing middleware that facilitates smooth communication between our platform and Email Service Providers.</p>
+                  </div>
+            
+                  <div id="airflow-section">
+                <h3>Composer Airflow Administrator</h3>
+            
+                <p>I manage the intricate flow of data, overseeing both its ingress and egress. Handle hundreds of client running workflows, using BigQuery to query data, and supplying files for clients.</p>
+                  </div>
+                </div>
+            </div>
+            </div>
+            <div class="maps info">
+            <div class="about-text">
+                <h1>Maps</h1>
+                <p>I enjoy exploring new places and visualizing data through interactive maps. Whether it's mapping out travel routes or analyzing geographic trends, maps help me see the world from different perspectives.</p>
+            </div>
+            </div>
+            <div class="interests info">
+            <div class="about-text">
+                <h1>Interests</h1>
+                <p>Outside of work, I am passionate about technology, science fiction, and creative problem solving. I love reading, hiking, and experimenting with new programming languages and frameworks.</p>
+            </div>
+            </div>
+            <div class="hitchhiking info">
+            <div class="about-text">
+                <h1>Hitchhiking</h1>
+                <p>Inspired by the spirit of adventure, I appreciate the unpredictability and excitement of hitchhiking—both as a metaphor for life and as a way to meet new people and experience new cultures.</p>
+            </div>
+            </div>
+        </div>
     </div>
 </body>
