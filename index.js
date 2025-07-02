@@ -30,9 +30,9 @@ var closeMenuAfterSelection = function (singleMenu, listMenu) {
     var extendedOptionSelector = singleMenuClass + ' .extend_option';
     var optionSelector = singleMenuClass + ' .option';
 
+    // Only set opacity, do not reset transform (let anime.js handle it)
     $(option2Selector).css({
-        'opacity': 0,
-        'transform': 'none'
+        'opacity': 0
     }).removeClass("sticky");
 
     $(optionSelector).removeClass('fullopen').css('width', '600px');
@@ -45,9 +45,15 @@ var closeMenuAfterSelection = function (singleMenu, listMenu) {
 };
 
 function setSelectedOption(currentTarget) {
-    selectedOptionFinal.target = currentTarget;
+    if (currentTarget.attr('class').indexOf('extend_option') > -1){
+        selectedOptionFinal.target = currentTarget.parent().find('.option2');
+        selectedOptionFinal.parent = currentTarget;
+    } else {
+        selectedOptionFinal.target = currentTarget;
+        selectedOptionFinal.parent = currentTarget.closest('.secondary_list');
+    }
     selectedOptionFinal.position = currentTarget.closest('.secondary_list').find('.option2:not(.extend_option)').index(currentTarget);
-    selectedOptionFinal.parent = currentTarget.closest('.secondary_list');
+    debugger;
 }
 
 ////////////////////////////////////////////////////////////////
@@ -100,12 +106,18 @@ function openWarningMenu(menuNumber) {
     setSelectedOption($(menuNumber).find('.extend_option.warning'));
 }
 
-function flipUpSecondary(menu) {
-    timelines.flipUpSecondary(menu);
-}
+function openMapsMenu(menuNumber) {
+        var translateY = (
+        $('.activeMenu').offset().top -
+        $(".location").offset().top -
+        ((1 * 24) + 10) +
+        (1 * 5) +
+        100
+    );
+    // debugger;
+    timelines.openMapsMenu(menuNumber, translateY, timelines.flipUpSecondary);
 
-function removeFlipUp(closeMenu) {
-    timelines.removeFlipUp(closeMenu, state);
+    // setSelectedOption($(menuNumber).find('.extend_option.location'));
 }
 
 ////////////////////////////////////////////////////////////////
@@ -126,10 +138,12 @@ $(document)
         timelines.unhoverOption(selector);
     });
 
-$(document).on("click", ".hoverFix .option", function () {
+$(document).on("click", ".hoverFix .option", async function () {
+    // debugger;
     if (state.locked && !$(this).hasClass("fullopen")) return;
     const closeMenu = $(this);
-    const menuNumber = closeMenu.parent().parent();
+    var menuNumber = closeMenu.parent().parent();
+    // debugger;
     if (!menuNumber.length) return;
 
     if (!state.locked) {
@@ -138,17 +152,73 @@ $(document).on("click", ".hoverFix .option", function () {
 
         if ($(menuSelector).find('.extend_option.warning').length > 0) {
             openWarningMenu(menuSelector);
+        } else if ($(menuSelector).find('.extend_option.location').length > 0) {
+            setSelectedOption($(menuNumber).find('.extend_option.location'));
+            openMapsMenu(menuSelector);
         } else {
             openMenu(menuSelector, false);
         }
     } else if ($(this).hasClass("fullopen")) {
-        removeFlipUp(closeMenu, true);
+
+        var currItem = $(this);
+        var container = currItem.closest('.fullWidth').find('.secondary_list');
+        var extItem = container.find('.extend_option');
+        var options = container.find('.option2');
+        var menu =  currItem.parent().parent();
+        // var menuNumber = currItem.parent().parent();
+
+        utils.freezeOptionsInPlace(options);
+        await new Promise(requestAnimationFrame);
+
+        // debugger;
+        const tl = anime.createTimeline({
+            defaults: {
+                easing: "easeOutExpo",
+                duration: 2000
+            },
+            onComplete: function () {
+                // debugger;`
+                options.attr('style', 'opacity: 0;');
+                menu.find('.option').removeClass("fullopen");
+                menu.find('.option').attr('style', null);
+                // options.attr('style', 'opacity: 0;');
+                container.css({
+                    width: null,
+                });
+                state.locked = false;
+            }
+        });
+
+        tl.add(extItem.get(), {
+            width: "100px",
+            scaleX: 1,
+            easing: "easeOutElastic(1, .5)",
+            duration: 600
+        })
+        .add(extItem.get(), {
+            opacity: 0,
+            duration: 120
+        });
+
+        // Pause before drop
+        tl.add({}, {duration: 220});
+
+        tl.add(options.get(), {
+        top: (el, i, l) => {
+            const $el = $(el);
+            const currentTop = parseInt($el.css('top'), 10) || 0;
+            return currentTop + 1200; // Drop distance
+        },
+        easing: "cubicBezier(0.23, 1, 0.32, 1.2)",
+        duration: 1200
+    });
     }
 });
 
-$(document).on('click', '.secondary_list .option2:not(.grey)', function (el) {
+$(document).on('click', '.secondary_list .option2:not(.grey):visible', function (el) {
     state.locked = false;
     const currentTarget = $(el.currentTarget);
+    const sectionId = $(el.currentTarget).text().trim().toLowerCase();
     const parentParent = currentTarget.parent().parent();
     if (!currentTarget.length || !parentParent.length) return;
 
@@ -167,7 +237,7 @@ $(document).on('click', '.secondary_list .option2:not(.grey)', function (el) {
     if (!$activeMenu.length || !$optionParent.length) return;
 
      const optionText = $(this).text().trim().toLowerCase();
-    const sectionId = utils.getSectionIdFromOptionText(optionText);
+    
     // if (sectionId) showInfoSection(sectionId);
     // debugger;
     const translateY = (
@@ -191,10 +261,11 @@ $(document).on('click', '.option2.grey', function () {
     var selectedOption = selectedOptionFinal.target || false;
     var optinSelector = utils.getClassNameFromObj(selectedOption);
     if (!optinSelector) return;
-
+    debugger;
     timelines.animateGreyOptions(selectedOptionFinal, state, optinSelector);
 });
 
 $(document).ready(function () {
+    window.scrollTo(0, 0);
     start();
 });

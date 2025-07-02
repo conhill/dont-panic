@@ -21,7 +21,9 @@ $colors: (orange: #ae6d13,
   darkpurple: #6c2456,
   green: #4d9d2e,
   grey: #333333,
-  warning: #AE1F13
+  warning: #AE1F13,
+  codeBack: #ac3663,
+  orangeFont: #b15828
 );
 
 
@@ -150,6 +152,17 @@ body.background {
   border-radius: 360px;
 }
 
+.fullWidth .extend_option.warning {
+    background-color:map-get($colors, warning);
+  // height:20px;
+  border: 2px solid map-get($colors, warning);
+    transform-origin: left center; 
+}
+
+.extend_option.location {
+  transform-origin: left center;
+}
+
 .rollout.hide {
   display: none !important;
 }
@@ -221,10 +234,15 @@ body.background {
 .secondary_list {
   display: inline-block;
   position: absolute;
+  min-width: 100px;
 }
 
 .secondary_list.sticky {
   left: 750px;
+}
+
+.thirdMenu .option2 {
+  transform-origin: center center;
 }
 
 .expand .extend_option {
@@ -385,6 +403,47 @@ body.background {
   align-items: flex-start; // Center content horizontally
 }
 
+.hitchhiking.info{
+  background-image: url('../images/coding.png');
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: initial !important;
+  // background-size: auto 80%; // or contain, or a fixed size
+  background-color: #ac3663; // match the image's dominant color
+}
+
+.foreward.info {
+  background-image: url('../images/about-me.png');
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: contain;
+  background-color: #451f43;
+}
+
+.maps.info {
+  background-image: url('../images/nyc.png');
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 100% 100%;
+  background-color: #1a69b1;
+}
+
+.hobby.info {
+  background-image: url('../images/3dprint.png');
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 40% 100% !important;
+  background-color: #459b8e;
+}
+
+.work.info {
+  background-image: url('../images/work.png');
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 40% 100% !important;
+  background-color: #077e7a;
+}
+
 .space,
 .space2 {
   flex: 1; // Use flex to push the content to the edges
@@ -400,12 +459,12 @@ body.background {
 .foreward.info {
   height: 100%; // Ensure the height doesn't exceed the parent
   box-sizing: border-box;
-  background-image: url('../images/about-me.png');
-  background-repeat: no-repeat;
-  -webkit-background-size: contain;
-  -moz-background-size: contain;
-  -o-background-size: contain;
-  background-size: contain;
+  // background-image: url('../images/about-me.png');
+  // background-repeat: no-repeat;
+  // -webkit-background-size: contain;
+  // -moz-background-size: contain;
+  // -o-background-size: contain;
+  // background-size: contain;
   display: flex;
   flex-direction: column;
   background-color: #451f43;
@@ -415,7 +474,25 @@ body.background {
     width: 50%;// Set max height to avoid exceeding the container
   }
 }
+.info {
+    height: 100%; // Ensure the height doesn't exceed the parent
+  box-sizing: border-box;
+    -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-size: 100vw 100%;
+}
 
+.info.hidden {
+  display: none;
+}
+html {
+  overflow:hidden;
+}
+.maps p {
+  font-size: 30px;
+}
 .about-text {
   padding: 20px;
   box-sizing: border-box;
@@ -481,11 +558,14 @@ body.background {
   .blue-text {
     color: #63b4ba;
   }
+  .orange-text {
+    color: map-get($colors, orangeFont);
+  }
 }
 
-.warning {
-  transform-origin: left center; 
-}
+// .warning {
+//   transform-origin: left center; 
+// }
 
 /*
     color: #63b4ba;
